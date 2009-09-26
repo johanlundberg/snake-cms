@@ -1,0 +1,92 @@
+Requirements:
+Django 1.1 or later (SVN 11593)
+django-tagging 0.3 or later (http://code.google.com/p/django-tagging/)
+Markdown for Python 2.0 or later (http://www.freewisdom.org/projects/python-markdown)
+TinyMCE 3.2.6 or later (http://tinymce.moxiecode.com/)
+django-tinymce 1.5 or later (SVN 94) (http://code.google.com/p/django-tinymce/)
+django-filebrowser (SVN 443) (http://code.google.com/p/django-filebrowser/)
+If you have problems installing PIL for django-filebrowser see, 
+http://code.google.com/appengine/docs/python/images/installingPIL.html.
+
+How to install:
+Install the required apps according to their install instructions, but se below for
+suggested changes. You have to set up the paths in snake-cms/cms/settings.py yourself
+if you move the django-filebrowser and tinymce files anywhere else.
+
+django-filebrowser can be moved in to snake-cms directory and copy 
+filebrowser/media/filebrowser to snake-cms/media/. 
+
+Make the subdirectories of snake-cms/media/ writable by your Apache user.
+
+Move tinymce/jscripts/tiny_mce from the TinyMCE distribution to snake-cms/media/jscripts.
+
+Install mod-wsgi for Apache.
+
+Create the database and change the following lines in snake-cms/cms/settings.py to 
+reflect your settings.
+
+This should point to the snake-cms directory
+SNAKE_CMS_ROOT = '/path/to/snake-cms/'
+This is the URL used. The one below makes the full URL, http://www.example.com/snake-cms/.
+SNAKE_CMS_URL = '/snake-cms/'
+This is the URL used for the media files.
+SNAKE_CMS_MEDIA_URL = '/snake-cms/media/'
+
+It is always good to set an admin mail address.
+ADMINS = (
+    ('Admin', 'webmaster@example.com'),
+)
+
+If you want to get a mail when someone comments you need to provide a mail server.
+DEFAULT_FROM_EMAIL = 'postmaster@example.com'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = '25'
+
+If you use the link portion if the cms and want the links posted to del.icio.us
+you need to provide your account credentials.
+DELICIOUS_USER = ''
+DELICIOUS_PASSWORD = ''
+
+(If you need help see, 
+http://docs.djangoproject.com/en/dev/topics/install/#database-installation)
+DATABASE_ENGINE = ''	# 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = ''		# Or path to database file if using sqlite3.
+DATABASE_USER = ''		# Not used with sqlite3.
+DATABASE_PASSWORD = ''	# Not used with sqlite3.
+DATABASE_HOST = ''		# Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''		# Set to empty string for default. Not used with sqlite3.
+
+TIME_ZONE = 'Europe/Stockholm'
+
+Set this to a random string -- the longer, the better.
+SECRET_KEY = 'SET A SECRET KEY'
+
+If you want comments checked against Akismet for spam provide an Akismet API key.
+See http://akismet.com/personal/
+AKISMET_API_KEY = ''
+
+Add the following lines to your Apache config:
+#Snake-cms
+WSGIScriptAlias /snake-cms "[path to snake-cms]/snake-cms/snake-cms.wsgi"
+WSGIDaemonProcess snake-cms processes=5 threads=1
+WSGIProcessGroup snake-cms
+Alias /snake-cms/media/ "[path to snake-cms]/snake-cms/media/"
+<Directory "[path to snake-cms]/snake-cms/media/">
+	DirectoryIndex None
+	Options None
+	AllowOverride None
+	Order allow,deny
+	allow from all
+</Directory>
+
+#This if for the admin interface
+Alias /snake-cms/admin_media/ "/usr/lib/python2.5/site-packages/django/contrib/admin/media/"
+<Directory "/usr/lib/python2.5/site-packages/django/contrib/admin/media/">
+	DirectoryIndex None
+	Options None
+	AllowOverride None
+	Order allow,deny
+	allow from all
+</Directory>
+
+Run python manage.py syncdb in snake-cms/cms/.

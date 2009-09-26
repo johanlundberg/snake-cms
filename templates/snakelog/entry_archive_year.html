@@ -1,0 +1,21 @@
+{% extends "base_entries.html" %}
+
+{% block title %}{{ block.super }} | {{ year }}{% endblock %}
+
+{% block content %}
+	<h2>Entries for {{ year }}</h2>
+	<div class="content">
+		<ul>
+			{% for month in date_list %}
+			<li>
+				<a href="{% url snakelog_entry_archive_month year,month|date:"b" %}">
+					{{ month|date:"F" }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock %}
+
+{% block whatis %}
+<p>This is a list of month in  {{ year }} in which there are published entries.</p>
+{% endblock %}

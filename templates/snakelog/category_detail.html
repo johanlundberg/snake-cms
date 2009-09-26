@@ -1,0 +1,29 @@
+{% extends "base_categories.html" %}
+
+{% block title %}{{ block.super }} | Categories{% endblock %}
+
+{% block content %}
+<ul>
+{% for entry in object_list %}
+	<!-- Start blob -->
+	<div class="content">
+		<h2>{{ entry.title }}</h2>
+		<p>Published on {{ entry.pub_date|date:"F j, Y" }}</p>
+		{% if entry.excerpt_html %}
+			{{ entry.excerpt_html|safe }}
+		{% else %}
+			{{ entry.body_html|truncatewords_html:"50"|safe }}
+		{% endif %}
+		<p class="right"><a href="{{ entry.get_absolute_url }}">Read full entry...</a></p>
+		{% load comments %}
+		{% get_comment_count for snakelog.entry entry.id as comment_count %}
+		<p class="italic">So far, there are {{ comment_count }} comment{{ comment_count|pluralize }} on this entry.</p>
+	</div>
+	<!-- End blob -->
+{% endfor %}
+</ul>
+{% endblock %}
+
+{% block whatis %}
+<p>This is a list of all entries in the category <strong>{{ category }}</strong>.</p>
+{% endblock %}

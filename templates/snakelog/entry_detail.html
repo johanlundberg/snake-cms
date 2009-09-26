@@ -1,0 +1,71 @@
+{% extends "base_entries.html" %}
+
+{% block title %}{{ block.super }} | {{ object.title }}{% endblock %}
+
+{% block content %}
+<!-- Start blob -->
+<div class="content">
+	<h2>{{ object.title }}</h2>
+	<p>{{ object.body_html|safe }}</p>
+</div>
+<!-- End blob -->
+
+<!-- Comments -->
+{% load comments %}
+{% load markup %}
+{% get_comment_list for snakelog.entry object.id as comment_list %}
+{% if comment_list %}
+	<h2>Comments:</h2>
+	{% for comment in comment_list %}
+		<div class="{% cycle 'comment' 'comment_noborder' %}">
+			<p> On {{ comment.submit_date|date:"F j, Y" }},
+			{{ comment.name }} said:</p>
+			{{ comment.comment|markdown:"safe" }}
+		</div>
+	{% endfor %}
+{% endif %}
+<h2>Post a comment:</h2>
+{% render_comment_form for object %}
+<!-- End comments -->
+{% endblock %}
+
+{% block whatis %}
+<p> This is an entry posted on 
+	{{ object.pub_date|date:"F j, Y" }}.</p>
+{% if object.categories.count %}
+	<p>This entry is part of the categor{{ object.categories.count|pluralize:"y,ies" }} 
+	{% for category in object.categories.all %}
+		<a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
+		{% if forloop.last %}
+				{% comment %}Does nothing for the last time through the loop{% endcomment %}
+			{% else %}
+				{% ifequal forloop.revcounter0 1 %}
+					and
+				{% else %}
+					, 
+			{% endifequal %}
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<p>This entry isn't part of any categories.</p>
+{% endif %}
+{% load tagging_tags %}
+{% tags_for_object object as tag_list %}
+{% if tag_list.count %}
+	<p>Tag{{ tag_list.count|pluralize:",s" }}: 
+	{% for tag in tag_list %}
+	<a href="{% url snakelog_tag_list %}entries/{{ tag }}/">{{ tag }}</a>
+		{% if forloop.last %}
+				{% comment %}Does nothing for the last time through the loop {% endcomment %}
+			{% else %}
+			{% ifequal forloop.revcounter0 1 %} 
+				 and
+			{% else %}
+				, 
+			{% endifequal %}
+		{% endif %}
+	{% endfor %}
+{% else %}
+	<p>There are no tags for this entry.</p>
+{% endif %}
+{% endblock %}
