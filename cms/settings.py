@@ -34,7 +34,7 @@ MEDIA_URL = SNAKE_CMS_MEDIA_URL
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = join(SNAKE_CMS_URL, 'media/')
+ADMIN_MEDIA_PREFIX = join(SNAKE_CMS_URL, 'media/admin/')
 
 #django-tinymce settings
 #TINYMCE_JS_URL = join(SNAKE_CMS_MEDIA_URL, 'jscripts/tiny_mce/tiny_mce_src.js')
@@ -85,7 +85,7 @@ DELICIOUS_PASSWORD = ''
 # Database settings
 DATABASE_ENGINE = 'sqlite3'
 # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/var/django-code/snake-cms/snake-cms.sqlite3'
+DATABASE_NAME = '/var/django-code/snake-cms/db/snake-cms.sqlite3'
 # Or path to database file if using sqlite3.
 DATABASE_USER = ''
 # Not used with sqlite3.
