@@ -1,22 +1,26 @@
 from os.path import join
+from sys import path
 
 # Django settings for cms project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-SNAKE_CMS_ROOT = '/path/to/snake-cms/'
+SNAKE_CMS_ROOT = '/var/django-code/snake-cms/'
 # URL without the host name, 
-# eg. http://www.example.com/snake-cms/.
-SNAKE_CMS_URL = '/snake-cms/'
+# eg. /snake-cms/ for http://www.example.com/snake-cms/.
+SNAKE_CMS_URL = '/'
 # URL without the host name, 
-# eg. http://www.example.com/snake-cms/media/.
-SNAKE_CMS_MEDIA_URL = '/snake-cms/media/'
+# eg. /snake-cms/media/ for http://www.example.com/snake-cms/media/.
+SNAKE_CMS_MEDIA_URL = '/media/'
 
 #
 # No need to change the paths below if you followed the 
 # instructions in the README file.
 #
+
+# Add snake-cms to the python path
+path.append( SNAKE_CMS_ROOT )
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
@@ -30,32 +34,37 @@ MEDIA_URL = SNAKE_CMS_MEDIA_URL
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = join(SNAKE_CMS_URL, 'admin_media/')
+ADMIN_MEDIA_PREFIX = join(SNAKE_CMS_URL, 'media/')
 
 #django-tinymce settings
-TINYMCE_JS_URL = join(SNAKE_CMS_MEDIA_URL, 'jscripts/tiny_mce/tiny_mce_src.js')
-TINYMCE_JS_ROOT = join(SNAKE_CMS_ROOT, 'media/jscripts/tiny_mce/')
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table,paste,searchreplace",
-    'relative_urls': False,
-    'theme': "advanced",
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 10,
-}
-TINYMCE_SPELLCHECKER = False
-TINYMCE_COMPRESSOR = True
-TINYMCE_FILEBROWSER = True
+#TINYMCE_JS_URL = join(SNAKE_CMS_MEDIA_URL, 'jscripts/tiny_mce/tiny_mce_src.js')
+#TINYMCE_JS_ROOT = join(SNAKE_CMS_ROOT, 'media/jscripts/tiny_mce/')
+#TINYMCE_DEFAULT_CONFIG = {
+#    'plugins': "table,paste,searchreplace",
+#    'relative_urls': False,
+#    'theme': "advanced",
+#    'cleanup_on_startup': True,
+#    'custom_undo_redo_levels': 10,
+#}
+#TINYMCE_SPELLCHECKER = False
+#TINYMCE_COMPRESSOR = True
+#TINYMCE_FILEBROWSER = True
 
 #django-filebrowser settings
-FILEBROWSER_URL_WWW = join(SNAKE_CMS_URL, 'media/')
-FILEBROWSER_URL_ADMIN = join(SNAKE_CMS_URL, 'admin/filebrowser/')
-FILEBROWSER_URL_HOME = join(SNAKE_CMS_URL, 'admin/')
+FILEBROWSER_DEBUG = False
+FILEBROWSER_MEDIA_ROOT = MEDIA_ROOT
+FILEBROWSER_MEDIA_URL = MEDIA_URL
+FILEBROWSER_DIRECTORY = '' #Leave empty to use whole MEDIA_ROOT
 FILEBROWSER_URL_FILEBROWSER_MEDIA = join(SNAKE_CMS_MEDIA_URL, 'filebrowser/')
+FILEBROWSER_PATH_MEDIA = join(MEDIA_ROOT, 'filebrowser/')
 FILEBROWSER_URL_TINYMCE = join(SNAKE_CMS_MEDIA_URL, 'jscripts/tiny_mce/')
+FILEBROWSER_PATH_TINYMCE = join(MEDIA_ROOT, 'admin/tinymce/jscripts/tiny_mce/')
 FILEBROWSER_SAVE_FULL_URL = True
-FILEBROWSER_PATH_SERVER = MEDIA_ROOT
-FILEBROWSER_PATH_FILEBROWSER_MEDIA = join(MEDIA_ROOT, 'filebrowser/')
-FILEBROWSER_PATH_TINYMCE = TINYMCE_JS_ROOT
+
+# Grappelli settings
+GRAPPELLI_ADMIN_HEADLINE = 'Snake-cms'
+GRAPPELLI_ADMIN_TITLE = 'Snake-cms'
+GRAPPELLI_ADMIN_URL = join(SNAKE_CMS_URL, 'admin/')
 
 #Regular Django settings, change these if needed.
 ADMINS = (
@@ -73,12 +82,19 @@ EMAIL_PORT = '25'
 DELICIOUS_USER = ''
 DELICIOUS_PASSWORD = ''
 
-DATABASE_ENGINE = ''           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'snake_cms'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'snake_cms'             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+# Database settings
+DATABASE_ENGINE = 'sqlite3'
+# 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = '/var/django-code/snake-cms/snake-cms.sqlite3'
+# Or path to database file if using sqlite3.
+DATABASE_USER = ''
+# Not used with sqlite3.
+DATABASE_PASSWORD = ''
+# Not used with sqlite3.
+DATABASE_HOST = ''
+# Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''
+# Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -116,6 +132,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
+#Context processors for Grappelli
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.request",
+)
+
 ROOT_URLCONF = 'cms.urls'
 
 TEMPLATE_DIRS = (
@@ -140,5 +162,6 @@ INSTALLED_APPS = (
     'tagging',
     'filebrowser',
     'sorl.thumbnail',
-    'tinymce',
+    'grappelli',
+    #'tinymce',
 )

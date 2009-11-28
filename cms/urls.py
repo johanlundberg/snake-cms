@@ -14,8 +14,9 @@ urlpatterns = patterns('',
 
     # Admin URLs
     (r'^admin/filebrowser/', include('filebrowser.urls')),
-    (r'^tinymce/', include('tinymce.urls')),
-	(r'^admin/(.*)', admin.site.root),
+    (r'^grappelli/', include('grappelli.urls')),
+    #(r'^tinymce/', include('tinymce.urls')),
+    (r'^admin/(.*)', admin.site.root),
     # cms URLs
     (r'^/?$', 'django.views.generic.simple.redirect_to', { 'url': 'weblog/' } ),
     (r'^search/$', 'cms.search.views.search'),
