@@ -1,38 +1,74 @@
-Requirements:
-Django 1.1 or later (SVN 11593)
-django-tagging 0.3 or later (http://code.google.com/p/django-tagging/)
-Markdown for Python 2.0 or later (http://www.freewisdom.org/projects/python-markdown)
-TinyMCE 3.2.6 or later (http://tinymce.moxiecode.com/)
-django-tinymce 1.5 or later (SVN 94) (http://code.google.com/p/django-tinymce/)
-django-filebrowser (SVN 443) (http://code.google.com/p/django-filebrowser/)
-If you have problems installing PIL for django-filebrowser see, 
-http://code.google.com/appengine/docs/python/images/installingPIL.html.
+This work is licensed under the Creative Commons Attribution 3.0 
+Unported License. To view a copy of this license, visit 
+http://creativecommons.org/licenses/by/3.0/ or send a letter to 
+Creative Commons, 171 Second Street, Suite 300, San Francisco, 
+California, 94105, USA.
 
-How to install:
-Install the required apps according to their install instructions, but se below for
-suggested changes. You have to set up the paths in snake-cms/cms/settings.py yourself
-if you move the django-filebrowser and tinymce files anywhere else.
+####
+# Snake-cms trunk version install for Ubuntu
+####
 
-django-filebrowser can be moved in to snake-cms directory and copy 
-filebrowser/media/filebrowser to snake-cms/media/. 
+Install apache2 webserver.
+sudo apt-get install apache2
 
-Make the subdirectories of snake-cms/media/ writable by your Apache user.
+Install mod-wsgi for Apache2.
+sudo apt-get install libapache2-mod-wsgi
 
-Move tinymce/jscripts/tiny_mce from the TinyMCE distribution to snake-cms/media/jscripts.
+Install Django latest version.
+Download the latest version via svn,
+svn co http://code.djangoproject.com/svn/django/trunk/
+and install
+cd trunk
+sudo python setup.py install
 
-Install mod-wsgi for Apache.
+Go to a new directory, I use /var/django-code/.
 
-Create the database and change the following lines in snake-cms/cms/settings.py to 
-reflect your settings.
+Download snake-cms
+hg clone https://snake-cms.googlecode.com/hg/ snake-cms  
 
-This should point to the snake-cms directory
-SNAKE_CMS_ROOT = '/path/to/snake-cms/'
-This is the URL used. The one below makes the full URL, http://www.example.com/snake-cms/.
-SNAKE_CMS_URL = '/snake-cms/'
-This is the URL used for the media files.
-SNAKE_CMS_MEDIA_URL = '/snake-cms/media/'
+Download django-tagging latest version
+svn checkout http://django-tagging.googlecode.com/svn/trunk/ django-tagging
+Copy the directory django-tagging/tagging in to snake-cms,
+cp -r django-tagging/tagging/ snake-cms/.
 
-It is always good to set an admin mail address.
+Download django-filebrowser latest version
+svn checkout http://django-filebrowser.googlecode.com/svn/trunk/filebrowser/ filebrowser
+Copy the directory filebrowser in to snake-cms,
+cp -r filebrowser/ snake-cms/.
+
+Symlink filebrowser media to snake-cms media folder,
+cd snake-cms/media/
+ln -s ../filebrowser/media/filebrowser/ filebrowser
+
+Install sorl.thumbnail latest version
+hg clone https://sorl-thumbnail.googlecode.com/hg/ sorl-thumbnail
+Copy the directory sorl-thumbnail/sorl in to snake-cms,
+cp -r sorl-thumbnail/sorl snake-cms/.
+
+Install PIL
+sudo apt-get install python-imaging
+
+Download django-grappelli
+svn checkout http://django-grappelli.googlecode.com/svn/trunk/grappelli/ grappelli
+Copy the directory grappelli in to snake-cms,
+cp -r grappelli/ snake-cms/.
+
+Symlink grappelli media to snake-cms media folder,
+cd snake-cms/media/
+ln -s ../grappelli/media/ admin
+
+Symlink grappelli templates to snake-cms templates folder,
+cd snake-cms/templates/
+ln -s ../grappelli/templates/admin/ admin
+
+Install python-markdown 2.0
+wget http://pypi.python.org/packages/source/M/Markdown/Markdown-2.0.tar.gz
+tar xvzf Markdown-2.0.tar.gz
+cp -r markdown-2.0/markdown snake-cms/.
+
+Check snake-cms/cms/settings.py, at least the following lines,
+
+It is always good to set a name and an admin mail address,
 ADMINS = (
     ('Admin', 'webmaster@example.com'),
 )
@@ -42,20 +78,30 @@ DEFAULT_FROM_EMAIL = 'postmaster@example.com'
 EMAIL_HOST = 'smtp.example.com'
 EMAIL_PORT = '25'
 
-If you use the link portion if the cms and want the links posted to del.icio.us
+If you use the link portion of the cms and want the links posted to del.icio.us
 you need to provide your account credentials.
 DELICIOUS_USER = ''
 DELICIOUS_PASSWORD = ''
 
-(If you need help see, 
-http://docs.djangoproject.com/en/dev/topics/install/#database-installation)
-DATABASE_ENGINE = ''	# 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = ''		# Or path to database file if using sqlite3.
-DATABASE_USER = ''		# Not used with sqlite3.
-DATABASE_PASSWORD = ''	# Not used with sqlite3.
-DATABASE_HOST = ''		# Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''		# Set to empty string for default. Not used with sqlite3.
+If you want to use a sqlite3 database you need to create a directory in snake-cms
+called db and in that directory create a file called snake-cms.sqlite3. Then you
+have to make both the newly created directory and the file readable and writeble
+by your webservers user. (In Ubuntu that user is www-data)
+# Database settings
+DATABASE_ENGINE = 'sqlite3'
+# 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = join(SNAKE_CMS_ROOT, 'db/snake-cms.sqlite3')
+# Or path to database file if using sqlite3.
+DATABASE_USER = ''
+# Not used with sqlite3.
+DATABASE_PASSWORD = ''
+# Not used with sqlite3.
+DATABASE_HOST = ''
+# Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''
+# Set to empty string for default. Not used with sqlite3.
 
+Set your time zone,
 TIME_ZONE = 'Europe/Stockholm'
 
 Set this to a random string -- the longer, the better.
@@ -65,28 +111,22 @@ If you want comments checked against Akismet for spam provide an Akismet API key
 See http://akismet.com/personal/
 AKISMET_API_KEY = ''
 
-Add the following lines to your Apache config:
+Sync the database,
+cd snake-cms/cms/
+python manage.py syncdb
+
+Configure apache2 to serve up snake-cms,
+add the following to /etc/apache2/sites-available/default.
 #Snake-cms
-WSGIScriptAlias /snake-cms "[path to snake-cms]/snake-cms/snake-cms.wsgi"
+WSGIScriptAlias / "[path to snake-cms]/snake-cms/snake-cms.wsgi"
 WSGIDaemonProcess snake-cms processes=5 threads=1
 WSGIProcessGroup snake-cms
-Alias /snake-cms/media/ "[path to snake-cms]/snake-cms/media/"
+Alias /media/ "[path to snake-cms]/snake-cms/media/"
 <Directory "[path to snake-cms]/snake-cms/media/">
-	DirectoryIndex None
-	Options None
-	AllowOverride None
-	Order allow,deny
-	allow from all
+        DirectoryIndex None
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        allow from all
 </Directory>
 
-#This if for the admin interface
-Alias /snake-cms/admin_media/ "/usr/lib/python2.5/site-packages/django/contrib/admin/media/"
-<Directory "/usr/lib/python2.5/site-packages/django/contrib/admin/media/">
-	DirectoryIndex None
-	Options None
-	AllowOverride None
-	Order allow,deny
-	allow from all
-</Directory>
-
-Run python manage.py syncdb in snake-cms/cms/.
