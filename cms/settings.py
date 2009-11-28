@@ -3,7 +3,7 @@ from sys import path
 
 # Django settings for cms project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 SNAKE_CMS_ROOT = '/var/django-code/snake-cms/'
@@ -14,12 +14,7 @@ SNAKE_CMS_URL = '/'
 # eg. /snake-cms/media/ for http://www.example.com/snake-cms/media/.
 SNAKE_CMS_MEDIA_URL = '/media/'
 
-#
-# No need to change the paths below if you followed the 
-# instructions in the README file.
-#
-
-# Add snake-cms to the python path
+# Add snake-cms directory to the python path
 path.append( SNAKE_CMS_ROOT )
 
 # Absolute path to the directory that holds media.
@@ -35,20 +30,6 @@ MEDIA_URL = SNAKE_CMS_MEDIA_URL
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = join(SNAKE_CMS_URL, 'media/admin/')
-
-#django-tinymce settings
-#TINYMCE_JS_URL = join(SNAKE_CMS_MEDIA_URL, 'jscripts/tiny_mce/tiny_mce_src.js')
-#TINYMCE_JS_ROOT = join(SNAKE_CMS_ROOT, 'media/jscripts/tiny_mce/')
-#TINYMCE_DEFAULT_CONFIG = {
-#    'plugins': "table,paste,searchreplace",
-#    'relative_urls': False,
-#    'theme': "advanced",
-#    'cleanup_on_startup': True,
-#    'custom_undo_redo_levels': 10,
-#}
-#TINYMCE_SPELLCHECKER = False
-#TINYMCE_COMPRESSOR = True
-#TINYMCE_FILEBROWSER = True
 
 #django-filebrowser settings
 FILEBROWSER_DEBUG = False
@@ -85,7 +66,7 @@ DELICIOUS_PASSWORD = ''
 # Database settings
 DATABASE_ENGINE = 'sqlite3'
 # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/var/django-code/snake-cms/db/snake-cms.sqlite3'
+DATABASE_NAME = join(SNAKE_CMS_ROOT, 'db/snake-cms.sqlite3')
 # Or path to database file if using sqlite3.
 DATABASE_USER = ''
 # Not used with sqlite3.
@@ -163,5 +144,4 @@ INSTALLED_APPS = (
     'filebrowser',
     'sorl.thumbnail',
     'grappelli',
-    #'tinymce',
 )
