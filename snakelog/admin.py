@@ -1,9 +1,6 @@
 from django.contrib import admin
 from snakelog.models import Category, Entry, Link
 
-#class SearchKeywordInline(admin.TabularInline):
-#    model = SearchKeyword
-#
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
