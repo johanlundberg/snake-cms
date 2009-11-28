@@ -27,6 +27,6 @@ urlpatterns = patterns('',
     (r'^weblog/', include('snakelog.urls.entries')),
     # Comment URLS
     (r'^comments/', include('django.contrib.comments.urls')),
-    # Last catch all for CMS
+    # Last catch all for flatpages
     (r'', include('django.contrib.flatpages.urls')),
 )
