@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 <head>
-	<link type="text/css" href="{% load cms_tags %}{% snake_cms_media_url %}/css/perfect3col.css" rel="stylesheet" media="screen" /> 
-	<link rel="shortcut icon" href="{% snake_cms_media_url %}/images/rar.ico" type="image/x-icon" />
+	<link type="text/css" href="{% load cms_tags %}{% snake_cms_media_url %}css/perfect3col.css" rel="stylesheet" media="screen" /> 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>snake-cms {% block title %}{% endblock %}</title>
 </head>
@@ -18,7 +17,7 @@
 		<li><a href="{% url snakelog_category_list %}a_category/">A category</a></li>
 		<li><a>Tab 3</a></li>
 	</ul>
-	<p id="layoutdims"><a href="{% snake_cms_url %}/admin/">Admin</a></p>
+	<p id="layoutdims"><a href="{% snake_cms_url %}admin/">Admin</a></p>
 
 </div>
 <div class="colmask threecol">
