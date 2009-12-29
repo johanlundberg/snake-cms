@@ -11,13 +11,14 @@
     {% if form.errors %}
     <h1>{% blocktrans count form.errors|length as counter %}Please correct the error below{% plural %}Please correct the errors below{% endblocktrans %}</h1>
     {% else %}
-    <h2>Preview:</h2>
+    <h2>Preview</h2>
+          {{ form.cleaned_data.name }} said:
       <blockquote>{{ comment|markdown:"safe" }}</blockquote>
       <p>
       {% trans "and" %} <input type="submit" name="submit" class="submit-post" value="{% trans "Post your comment" %}" id="submit" /> {% trans "or" %}:
       </p>
     {% endif %}
-	<h2>make changes:</h2>
+        <h2>make changes:</h2>
     {% for field in form %}
       {% if field.is_hidden %}
         {{ field }}

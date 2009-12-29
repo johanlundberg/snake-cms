@@ -4,11 +4,94 @@ http://creativecommons.org/licenses/by/3.0/ or send a letter to
 Creative Commons, 171 Second Street, Suite 300, San Francisco, 
 California, 94105, USA.
 
+This work is licensed under the Creative Commons Attribution 3.0 
+Unported License. To view a copy of this license, visit 
+http://creativecommons.org/licenses/by/3.0/ or send a letter to 
+Creative Commons, 171 Second Street, Suite 300, San Francisco, 
+California, 94105, USA.
+
 ####
-# Snake-cms trunk version install for Ubuntu
+# Snake-cms 1.0 install from tar archive for Ubuntu
 ####
 
-Install apache2 webserver.
+Install apache2 web server.
+sudo apt-get install apache2
+
+Install mod-wsgi for Apache2.
+sudo apt-get install libapache2-mod-wsgi
+
+Install Django latest version or 1.2+ at least.
+Download the latest version via svn,
+svn co http://code.djangoproject.com/svn/django/trunk/
+and install
+cd trunk
+sudo python setup.py install
+
+Install PIL
+sudo apt-get install python-imaging
+
+Go to a new directory, I use /var/django-code/.
+
+Download snake-cms-1.0.tar.gz from snake-cms at Google Code.
+wget http://snake-cms.googlecode.com/files/snake-cms-1.0.tar.gz
+Unpack snake-cms
+tar -xvzf snake-cms-1.0.tar.gz
+
+Check snake-cms/cms/settings.py, at least the following lines,
+
+It is always good to set a name and an admin mail address,
+ADMINS = (
+    ('Admin', 'webmaster@example.com'),
+)
+
+If you want to get a mail when someone comments you need to provide a mail server.
+DEFAULT_FROM_EMAIL = 'postmaster@example.com'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = '25'
+
+If you use the link portion of the cms and want the links posted to del.icio.us
+you need to provide your account credentials.
+DELICIOUS_USER = ''
+DELICIOUS_PASSWORD = ''
+
+Set your time zone,
+TIME_ZONE = 'Europe/Stockholm'
+
+Set this to a random string -- the longer, the better.
+SECRET_KEY = 'SET A SECRET KEY'
+
+If you want comments checked against Akismet for spam provide an Akismet API key.
+See http://akismet.com/personal/
+AKISMET_API_KEY = ''
+
+You have to make both the directory snake-cms/db/ and the file snake-cms/db/snake-cms.sqlite3
+readable and writable by your web server user. (In Ubuntu that user is www-data)
+
+Configure apache2 to serve up snake-cms,
+add the following to /etc/apache2/sites-available/default.
+#Snake-cms
+WSGIScriptAlias / "[path to snake-cms]/snake-cms/snake-cms.wsgi"
+WSGIDaemonProcess snake-cms processes=5 threads=1
+WSGIProcessGroup snake-cms
+Alias /media/ "[path to snake-cms]/snake-cms/media/"
+<Directory "[path to snake-cms]/snake-cms/media/">
+        DirectoryIndex None
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        allow from all
+</Directory>
+
+The login for the admin page is admin/admin123.
+Don't forget to create a new user and delete the admin account.
+
+All done.
+
+####
+# Snake-cms 1.0 install with source for Ubuntu
+####
+
+Install apache2 web server.
 sudo apt-get install apache2
 
 Install mod-wsgi for Apache2.
@@ -85,8 +168,8 @@ DELICIOUS_PASSWORD = ''
 
 If you want to use a sqlite3 database you need to create a directory in snake-cms
 called db and in that directory create a file called snake-cms.sqlite3. Then you
-have to make both the newly created directory and the file readable and writeble
-by your webservers user. (In Ubuntu that user is www-data)
+have to make both the newly created directory and the file readable and writable
+by your web servers user. (In Ubuntu that user is www-data)
 # Database settings
 DATABASE_ENGINE = 'sqlite3'
 # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -130,3 +213,4 @@ Alias /media/ "[path to snake-cms]/snake-cms/media/"
         allow from all
 </Directory>
 
+All done.

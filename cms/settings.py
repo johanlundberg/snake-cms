@@ -6,7 +6,7 @@ from sys import path
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-SNAKE_CMS_ROOT = '/var/django-code/snake-cms/'
+SNAKE_CMS_ROOT = '/home/lundberg/Documents/django/snake-cms/'
 # URL without the host name, 
 # eg. /snake-cms/ for http://www.example.com/snake-cms/.
 SNAKE_CMS_URL = '/'
