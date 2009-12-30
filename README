@@ -143,6 +143,7 @@ wget http://pypi.python.org/packages/source/M/Markdown/Markdown-2.0.tar.gz
 tar xvzf Markdown-2.0.tar.gz
 cp -r markdown-2.0/markdown snake-cms/.
 
+Rename snake-cms/cms/cms_settings.py to settings.py.
 Check snake-cms/cms/settings.py, at least the following lines,
 
 It is always good to set a name and an admin mail address,
