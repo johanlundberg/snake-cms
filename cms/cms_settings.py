@@ -48,6 +48,7 @@ GRAPPELLI_ADMIN_TITLE = 'Snake-cms'
 GRAPPELLI_ADMIN_URL = join(SNAKE_CMS_URL, 'admin/')
 
 #Regular Django settings, change these if needed.
+SERVER_EMAIL = 'django@example.com'
 ADMINS = (
     ('Admin', 'webmaster@example.com'),
 )
@@ -111,6 +112,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 )
 
 #Context processors for Grappelli
