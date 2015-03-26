@@ -1,0 +1,284 @@
+## Table of contents ##
+
+
+# Install Snake-cms 1.0 install from tar archive for Ubuntu #
+
+Install apache2 web server.
+`sudo apt-get install apache2`
+
+Install mod-wsgi for Apache2.
+`sudo apt-get install libapache2-mod-wsgi`
+
+Install Django latest version or 1.2+ at least.
+Download the latest version via svn,
+`svn co http://code.djangoproject.com/svn/django/trunk/`
+and install
+```
+cd trunk
+sudo python setup.py install
+```
+
+Install PIL
+`sudo apt-get install python-imaging`
+
+Go to a new directory, I use /var/django-code/.
+
+Download snake-cms-1.0.tar.gz from snake-cms at Google Code.
+`wget http://snake-cms.googlecode.com/files/snake-cms-1.0.tar.gz`
+Unpack snake-cms
+`tar -xvzf snake-cms-1.0.tar.gz`
+
+Check snake-cms/cms/settings.py, at least the following lines,
+
+It is always good to set a name and an admin mail address,
+```
+ADMINS = (
+    ('Admin', 'webmaster@example.com'),
+)
+```
+
+If you want to get a mail when someone comments you need to provide a mail server.
+```
+DEFAULT_FROM_EMAIL = 'postmaster@example.com'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = '25'
+```
+
+If you use the link portion of the cms and want the links posted to del.icio.us
+you need to provide your account credentials.
+```
+DELICIOUS_USER = ''
+DELICIOUS_PASSWORD = ''
+```
+
+Set your time zone,
+```
+TIME_ZONE = 'Europe/Stockholm'
+```
+
+Set this to a random string -- the longer, the better.
+```
+SECRET_KEY = 'SET A SECRET KEY'
+```
+
+If you want comments checked against Akismet for spam provide an Akismet API key.
+See http://akismet.com/personal/
+```
+AKISMET_API_KEY = ''
+```
+
+You have to make both the directory snake-cms/db/ and the file snake-cms/db/snake-cms.sqlite3
+readable and writable by your web server user. (In Ubuntu that user is www-data)
+
+Configure apache2 to serve up snake-cms,
+add the following to /etc/apache2/sites-available/default.
+```
+#Snake-cms
+WSGIScriptAlias / "[path to snake-cms]/snake-cms/snake-cms.wsgi"
+WSGIDaemonProcess snake-cms processes=5 threads=1
+WSGIProcessGroup snake-cms
+Alias /media/ "[path to snake-cms]/snake-cms/media/"
+<Directory "[path to snake-cms]/snake-cms/media/">
+        DirectoryIndex None
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        allow from all
+</Directory>
+```
+
+The login for the admin page is **admin/admin123**.
+Don't forget to create a new user and delete the admin account.
+
+All done.
+
+# Install Snake-cms latest version from source for Ubuntu #
+
+Install apache2 web server.
+```
+sudo apt-get install apache2
+```
+
+Install mod-wsgi for Apache2.
+```
+sudo apt-get install libapache2-mod-wsgi
+```
+
+Install Django latest version.
+Download the latest version via svn,
+```
+svn co http://code.djangoproject.com/svn/django/trunk/
+and install
+cd trunk
+sudo python setup.py install
+```
+
+**Go to a new directory, I use /var/django-code/.**
+
+Download snake-cms
+```
+hg clone https://snake-cms.googlecode.com/hg/ snake-cms  
+```
+
+Download django-tagging latest version
+```
+svn checkout http://django-tagging.googlecode.com/svn/trunk/ django-tagging
+```
+Copy the directory django-tagging/tagging in to snake-cms,
+```
+cp -r django-tagging/tagging/ snake-cms/.
+```
+
+Download django-filebrowser latest version
+```
+svn checkout http://django-filebrowser.googlecode.com/svn/trunk/filebrowser/ filebrowser
+```
+Copy the directory filebrowser in to snake-cms,
+```
+cp -r filebrowser/ snake-cms/.
+```
+
+Symlink filebrowser media to snake-cms media folder,
+```
+cd snake-cms/media/
+ln -s ../filebrowser/media/filebrowser/ filebrowser
+```
+
+Install sorl.thumbnail latest version
+```
+hg clone https://sorl-thumbnail.googlecode.com/hg/ sorl-thumbnail
+```
+Copy the directory sorl-thumbnail/sorl in to snake-cms,
+```
+cp -r sorl-thumbnail/sorl snake-cms/.
+```
+
+Install PIL
+```
+sudo apt-get install python-imaging
+```
+
+Download django-grappelli
+```
+svn checkout http://django-grappelli.googlecode.com/svn/trunk/grappelli/ grappelli
+```
+Copy the directory grappelli in to snake-cms,
+```
+cp -r grappelli/ snake-cms/.
+```
+
+Symlink grappelli media to snake-cms media folder,
+```
+cd snake-cms/media/
+ln -s ../grappelli/media/ admin
+```
+
+Symlink grappelli templates to snake-cms templates folder,
+```
+cd snake-cms/templates/
+ln -s ../grappelli/templates/admin/ admin
+```
+
+Install python-markdown 2.0
+```
+wget http://pypi.python.org/packages/source/M/Markdown/Markdown-2.0.tar.gz
+tar xvzf Markdown-2.0.tar.gz
+cp -r markdown-2.0/markdown snake-cms/.
+```
+
+**Rename snake-cms/cms/cms\_settings.py to settings.py.**
+```
+cp snake-cms/cms/cms_settings.py snake-cms/cms/settings.py
+```
+
+Check snake-cms/cms/settings.py, at least the following lines,
+
+```
+SNAKE_CMS_ROOT = '[path to snake-cms directory]'
+```
+in this example setup this would be,
+```
+SNAKE_CMS_ROOT = '/vad/django-code/snake-cms/'
+```
+
+It is always good to set a name and an admin mail address,
+```
+ADMINS = (
+    ('Admin', 'webmaster@example.com'),
+)
+```
+
+If you want to get a mail when someone comments you need to provide a mail server.
+```
+DEFAULT_FROM_EMAIL = 'postmaster@example.com'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = '25'
+```
+
+If you use the link portion of the cms and want the links posted to del.icio.us
+you need to provide your account credentials.
+```
+DELICIOUS_USER = ''
+DELICIOUS_PASSWORD = ''
+```
+
+If you want to use a sqlite3 database you need to create a directory in snake-cms
+called db and in that directory create a file called snake-cms.sqlite3. Then you
+have to make both the newly created directory and the file readable and writable
+by your web servers user. (In Ubuntu that user is www-data)
+```
+# Database settings
+DATABASE_ENGINE = 'sqlite3'
+# 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = join(SNAKE_CMS_ROOT, 'db/snake-cms.sqlite3')
+# Or path to database file if using sqlite3.
+DATABASE_USER = ''
+# Not used with sqlite3.
+DATABASE_PASSWORD = ''
+# Not used with sqlite3.
+DATABASE_HOST = ''
+# Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''
+# Set to empty string for default. Not used with sqlite3.
+```
+
+Set your time zone,
+```
+TIME_ZONE = 'Europe/Stockholm'
+```
+
+Set this to a random string -- the longer, the better.
+```
+SECRET_KEY = 'SET A SECRET KEY'
+```
+
+If you want comments checked against Akismet for spam provide an Akismet API key.
+See http://akismet.com/personal/
+```
+AKISMET_API_KEY = ''
+```
+
+**Sync the database,**
+```
+cd snake-cms/cms/
+python manage.py syncdb
+```
+
+**Configure apache2 to serve up snake-cms,
+add the following to /etc/apache2/sites-available/default.**
+```
+#Snake-cms
+WSGIScriptAlias / "[path to snake-cms]/snake-cms/snake-cms.wsgi"
+WSGIDaemonProcess snake-cms processes=5 threads=1
+WSGIProcessGroup snake-cms
+Alias /media/ "[path to snake-cms]/snake-cms/media/"
+<Directory "[path to snake-cms]/snake-cms/media/">
+        DirectoryIndex None
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        allow from all
+</Directory>
+```
+
+All done.

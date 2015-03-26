@@ -1,0 +1,1 @@
+Starting from the cms and blog app (Coltrane) as it is done in [Practical Django Projects](http://www.apress.com/book/view/1590599969) by James Bennett the goal is to make easy to set up and easy to customize web site package.
